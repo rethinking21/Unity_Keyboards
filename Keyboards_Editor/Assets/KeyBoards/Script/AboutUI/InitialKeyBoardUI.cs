@@ -28,12 +28,15 @@ namespace Keyboard
         bool createButtonEvent = false;
 
         [Space, Header("Keyboard Setting")]
+        [SerializeField]
+        KeyBoardManager keyBoardManager;
         [SerializeField, Range(20,50)]
         int keySize = 30;
         [SerializeField]
         KeySetting currentKeySetting;
-        public List<KeyButton> keyButtons = new List<KeyButton> ();
+        public List<KeyButton> keyButtons = new();
 
+        bool shift = false;
         #endregion
 
         // Start is called before the first frame update
@@ -47,10 +50,20 @@ namespace Keyboard
             }
             if (createButtonEvent)
             {
-
+                CreateButtonEvent();
             }
-            KeySetting keySetting = new KorKeySetting();
-            ChangeKeySetting(ref keySetting, true);
+            shift = keyBoardManager.shiftKey;
+            ChangeKeySetting(ref keyBoardManager.keyMerge.key, shift);
+        }
+
+        private void Update()
+        {
+            //thinking...
+            if(keyBoardManager != null || shift != keyBoardManager.shiftKey)
+            {
+                shift = keyBoardManager.shiftKey;
+                ChangeKeySetting(ref keyBoardManager.keyMerge.key, shift);
+            }
         }
 
         #region Create Key
@@ -65,7 +78,7 @@ namespace Keyboard
                 newKeyButton.name = "Button " + defaultKeySetting.keyString[index].ToString();
                 newKeyButton.transform.parent = transform;
 
-                KeyButton key = new KeyButton();
+                KeyButton key = new();
                 key.name = defaultKeySetting.keyString[index].ToString();
                 key.index = index/2;
                 key.obj = newKeyButton;
@@ -116,6 +129,15 @@ namespace Keyboard
                     key.obj.transform.GetChild(0).GetComponent<Text>().text =
                         keySetting.keyString[(key.index * 2) + (shift ? 1 : 0)].ToString();
                 }
+            }
+        }
+
+        public void CreateButtonEvent()
+        {
+            foreach(var key in keyButtons)
+            {
+                key.obj.GetComponent<Button>().onClick.RemoveAllListeners();
+                key.obj.GetComponent<Button>().onClick.AddListener(() => keyBoardManager.AddKey(key.index));
             }
         }
     }

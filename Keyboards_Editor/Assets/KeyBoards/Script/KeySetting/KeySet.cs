@@ -10,14 +10,35 @@ namespace Keyboard
 
     }
 
-    public class EngKeySetting : KeySetting
+    public class KeyMerge
     {
-        public EngKeySetting()
+        public string text = "";
+        public KeySetting key;
+
+        public virtual void AddKey(int keyIndex)
         {
-            keyString =
-                "qQwWeErRtTyYuUiIoOpP"
-                + "aAsSdDfFgGhHjJkKlL"
-                + "zZxXcCvVbBnNmM"; //52
+
+        }
+
+        public virtual string GetString()
+        {
+            return text;
+        }
+
+        public virtual void ClearAll()
+        {
+            text = "";
+        }
+
+        public virtual void PushTempChar()
+        {
+
+        }
+
+        public virtual bool CanDeleteText()
+        {
+            return true;
         }
     }
+
 }
