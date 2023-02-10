@@ -304,7 +304,7 @@ namespace Keyboard
                             }
                             else
                             {
-                                if ((keyIndex < 10 && keyIndex % 2 == 1) && keyIndex != 7)
+                                if ((keyIndex < 10 && keyIndex % 2 == 1) && !(keyIndex == 7 || keyIndex == 9))
                                 {
                                     PushTempChar();
                                     waitString += key.keyString[keyIndex];
@@ -332,7 +332,7 @@ namespace Keyboard
                             }
                             else
                             {
-                                if ((keyIndex < 10 && keyIndex % 2 == 1) && keyIndex != 7)
+                                if ((keyIndex < 10 && keyIndex % 2 == 1) && !(keyIndex == 7 || keyIndex == 9))
                                 {
                                     PushTempChar();
                                     waitString += key.keyString[keyIndex];
@@ -495,6 +495,7 @@ namespace Keyboard
         {
             text = "";
             waitString = "";
+            waitStatus = KOR_STATUS.NONE;
         }
 
         public override void PushTempChar()
