@@ -52,7 +52,7 @@ namespace Keyboard
         // 종성 28자 40 ~ 67
         " ㄱㄲㄳㄴㄵㄶㄷㄹㄺㄻㄼㄽㄾㄿㅀㅁㅂㅄㅅㅆㅇㅈㅊㅋㅌㅍㅎ";
 
-        readonly Dictionary<int, int> keyToTable = new()
+        readonly Dictionary<int, int> keyToTable = new Dictionary<int, int>()
         {
             {0, 7}, //ㅂ
             {1, 8}, //ㅃ
@@ -112,7 +112,7 @@ namespace Keyboard
             {50, 37}, //ㅡ
             {51, 37}, //ㅡ
         };
-        readonly Dictionary<char, int> endTable = new()
+        readonly Dictionary<char, int> endTable = new Dictionary<char, int>()
         {
             {' ', 0},
             {'ㄱ', 1},
@@ -146,7 +146,7 @@ namespace Keyboard
             {'ㅎ', 27},
 
         };
-        readonly Dictionary<(char, int), int> mergeDict = new() // (char, key) Table
+        readonly Dictionary<(char, int), int> mergeDict = new Dictionary<(char, int), int>() // (char, key) Table
         {
             { ('ㅗ', 19), 28 }, // ㅘ
             { ('ㅗ', 20), 29 }, // ㅙ
@@ -168,7 +168,7 @@ namespace Keyboard
             { ('ㄹ', 27), 15 }, // ㅀ
             { ('ㅂ', 19), 18 }, // ㅄ
         };
-        readonly Dictionary<int, (int, int)> UnMergeDict = new()
+        readonly Dictionary<int, (int, int)> UnMergeDict = new Dictionary<int, (int, int)>()
         {
             {28, (27, 19)}, // ㅘ
             {29, (27, 20)}, // ㅙ
@@ -231,15 +231,16 @@ namespace Keyboard
                         {
                             if (Array.IndexOf(Vowels, keyIndex) != -1) // vowel check
                             {
-                                if (mergeDict.ContainsKey(((char)waitString[^1], keyToTable[keyIndex])))
+                                if (mergeDict.ContainsKey(((char)waitString[waitString.Length - 1], keyToTable[keyIndex])))
                                 {
                                     EditLastLetter(ref waitString,
-                                        SOUND_TABLE[mergeDict[((char)waitString[^1], keyToTable[keyIndex])]]);
+                                        SOUND_TABLE[mergeDict[((char)waitString[waitString.Length - 1], keyToTable[keyIndex])]]);
                                     waitStatus = KOR_STATUS.FIRST_VV;
                                 }
                                 else
                                 {
                                     PushTempChar();
+                                    waitString += key.keyString[keyIndex];
                                     waitStatus = KOR_STATUS.FIRST_V;
                                 }
                             }
@@ -256,7 +257,7 @@ namespace Keyboard
                         {
                             if (Array.IndexOf(Vowels, keyIndex) != -1) // vowel check
                             {
-                                char uniteChar = Unite(SOUND_TABLE.IndexOf(waitString[^1]), keyToTable[keyIndex] - 19);
+                                char uniteChar = Unite(SOUND_TABLE.IndexOf(waitString[waitString.Length - 1]), keyToTable[keyIndex] - 19);
                                 EditLastLetter(ref waitString,  uniteChar);
                                 waitStatus = KOR_STATUS.MIDDLE;
                             }
@@ -286,7 +287,7 @@ namespace Keyboard
 
                     case KOR_STATUS.MIDDLE: // 자음 + 모음
                         {
-                            disuniteChar = Disunite(waitString[^1]);
+                            disuniteChar = Disunite(waitString[waitString.Length - 1]);
                             if (Array.IndexOf(Vowels, keyIndex) != -1) // vowel check
                             {
                                 if (mergeDict.ContainsKey(((char)SOUND_TABLE[disuniteChar.mid + 19], keyToTable[keyIndex])))
@@ -323,7 +324,7 @@ namespace Keyboard
 
                     case KOR_STATUS.MIDDLE_VV: // 자음 + 모음 + 모음
                         {
-                            disuniteChar = Disunite(waitString[^1]);
+                            disuniteChar = Disunite(waitString[waitString.Length - 1]);
                             if (Array.IndexOf(Vowels, keyIndex) != -1) // vowel check
                             {
                                 PushTempChar();
@@ -351,7 +352,7 @@ namespace Keyboard
 
                     case KOR_STATUS.END: // 자음 + 모음 + 자음
                         {
-                            disuniteChar = Disunite(waitString[^1]);
+                            disuniteChar = Disunite(waitString[waitString.Length - 1]);
                             if (Array.IndexOf(Vowels, keyIndex) != -1) // vowel check
                             {
                                 (int first, int mid, int last) tempChar = (0, 0, 0);
@@ -384,7 +385,7 @@ namespace Keyboard
 
                     case KOR_STATUS.END_CC: // 자음 + 모음 + 자음 + 자음
                         {
-                            disuniteChar = Disunite(waitString[^1]);
+                            disuniteChar = Disunite(waitString[waitString.Length - 1]);
                             if (Array.IndexOf(Vowels, keyIndex) != -1) // vowel check
                             {
                                 (int first, int mid, int last) tempChar = (0, 0, 0);
@@ -431,7 +432,7 @@ namespace Keyboard
 
                     case KOR_STATUS.FIRST_VV:
                         {
-                            (int tmp, _) = UnMergeDict[SOUND_TABLE.IndexOf(waitString[^1])];
+                            (int tmp, _) = UnMergeDict[SOUND_TABLE.IndexOf(waitString[waitString.Length - 1])];
                             EditLastLetter(ref waitString, SOUND_TABLE[tmp]);
                             waitStatus = KOR_STATUS.FIRST_V;
                         }
@@ -439,7 +440,7 @@ namespace Keyboard
 
                     case KOR_STATUS.MIDDLE:
                         {
-                            disuniteChar = Disunite(waitString[^1]);
+                            disuniteChar = Disunite(waitString[waitString.Length - 1]);
                             EditLastLetter(ref waitString, SOUND_TABLE[disuniteChar.first]);
                             waitStatus = KOR_STATUS.FIRST_C;
                         }
@@ -447,7 +448,7 @@ namespace Keyboard
 
                     case KOR_STATUS.MIDDLE_VV:
                         {
-                            disuniteChar = Disunite(waitString[^1]);
+                            disuniteChar = Disunite(waitString[waitString.Length - 1]);
                             (int tmp, _) = UnMergeDict[disuniteChar.mid + 19];
                             disuniteChar.mid = tmp - 19;
                             EditLastLetter(ref waitString, Unite(disuniteChar));
@@ -457,7 +458,7 @@ namespace Keyboard
 
                     case KOR_STATUS.END:
                         {
-                            disuniteChar = Disunite(waitString[^1]);
+                            disuniteChar = Disunite(waitString[waitString.Length - 1]);
                             disuniteChar.last = 0;
                             EditLastLetter(ref waitString, Unite(disuniteChar));
                             if (Array.IndexOf(Vowels_VV, disuniteChar.mid + 19) != -1)
@@ -474,7 +475,7 @@ namespace Keyboard
 
                     case KOR_STATUS.END_CC:
                         {
-                            disuniteChar = Disunite(waitString[^1]);
+                            disuniteChar = Disunite(waitString[waitString.Length - 1]);
                             (int tmp, _) = UnMergeDict[disuniteChar.last];
                             disuniteChar.last = tmp;
                             EditLastLetter(ref waitString, Unite(disuniteChar));

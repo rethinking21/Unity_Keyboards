@@ -25,8 +25,17 @@ namespace Keyboard
             if (keyMerge == null) return;
             if (keyIndex >= 0)
             {
-                keyMerge.AddKey(keyIndex * 2 + (shiftKey ? 1 : 0));
+                if (keyIndex >= 0 && keyIndex <= 25)
+                {
+                    keyMerge.AddKey(keyIndex * 2 + (shiftKey ? 1 : 0));
+                }
+                else if (keyIndex >= 100 && keyIndex < 110)
+                {
+                    keyMerge.PushTempChar();
+                    keyMerge.text += (keyIndex - 100).ToString();
+                }
             }
+            //special key
             else if (keyIndex == -2) // shift
             {
                 shiftKey = !shiftKey;
