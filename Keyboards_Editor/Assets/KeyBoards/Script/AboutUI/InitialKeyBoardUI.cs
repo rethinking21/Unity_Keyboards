@@ -15,7 +15,7 @@ namespace Keyboard
         {
             public string name; // char? string?
             public int index;
-            public GameObject obj;
+            public Text text;
             public bool specialKey = false;
 
             [Space, Tooltip("key 'h' is position (0, 0), X=0 : 6, y, h, n")]
@@ -92,7 +92,6 @@ namespace Keyboard
                 }
                 newKeyButton.transform.SetParent(transform);
 
-                button.obj = newKeyButton;
                 RectTransform rect = newKeyButton.GetComponent<RectTransform>();
                 ChangeButtonRect(ref rect, button);
             }
@@ -127,20 +126,17 @@ namespace Keyboard
                     if (key.index >= 0 && key.index <= 25)
                     {
                         //thinking
-                        key.obj.transform.GetChild(0).GetComponent<Text>().text =
-                            keySetting.keyString[(key.index * 2) + (shift ? 1 : 0)].ToString();
+                        key.text.text = keySetting.keyString[(key.index * 2) + (shift ? 1 : 0)].ToString();
 
                     }
                     else
                     {
-                        key.obj.transform.GetChild(0).GetComponent<Text>().text =
-                            key.name;
+                        key.text.text = key.name;
                     }
                 }
                 else
                 {
-                    key.obj.transform.GetChild(0).GetComponent<Text>().text =
-                        key.name;
+                    key.text.text = key.name;
                 }
             }
         }
@@ -149,8 +145,8 @@ namespace Keyboard
         {
             foreach(var key in keyButtons)
             {
-                key.obj.GetComponent<Button>().onClick.RemoveAllListeners();
-                key.obj.GetComponent<Button>().onClick.AddListener(() => keyBoardManager.AddKey(key.index));
+                key.text.GetComponent<Button>().onClick.RemoveAllListeners();
+                key.text.GetComponent<Button>().onClick.AddListener(() => keyBoardManager.AddKey(key.index));
             }
         }
     }
