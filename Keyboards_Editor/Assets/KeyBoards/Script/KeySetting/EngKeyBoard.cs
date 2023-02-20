@@ -27,7 +27,7 @@ namespace Keyboard
             key = engKey;
         }
 
-        public virtual void Addkey(int keyIndex)
+        public override void AddKey(int keyIndex)
         {
             if (keyIndex >= 0)
             {
@@ -37,9 +37,22 @@ namespace Keyboard
                     text += key.keyString[keyIndex];
                 }
             }
-            else if(keyIndex == -3 || text.Length != 0) // del
+            else if (keyIndex >= 100 && keyIndex < 110)
+            {
+                text += (keyIndex - 100).ToString();
+            }
+            else if(keyIndex == -3 && text.Length != 0) // del
             {
                 text = text.Remove(text.Length - 1);
+            }
+            else if(keyIndex == -2) //shift
+            {
+                shift = !shift;
+                UIChanged = true;
+            }
+            else if (keyIndex == -4) //space
+            {
+                text += " ";
             }
         }
     }

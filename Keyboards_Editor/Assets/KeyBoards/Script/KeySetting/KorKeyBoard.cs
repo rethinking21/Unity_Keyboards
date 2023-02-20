@@ -409,6 +409,12 @@ namespace Keyboard
                         break;
                 }
                 #endregion
+                shift = false;
+            }
+            else if (keyIndex >= 100 && keyIndex < 110)
+            {
+                PushTempChar();
+                text += (keyIndex - 100).ToString();
             }
             else if (keyIndex == -3)
             {
@@ -484,6 +490,17 @@ namespace Keyboard
                         break;
                 }
                 #endregion
+                shift = false;
+            }
+            else if (keyIndex == -2) //shift
+            {
+                shift = !shift;
+                UIChanged = true;
+            }
+            else if (keyIndex == -4) //space
+            {
+                PushTempChar();
+                text += " ";
             }
         }
 

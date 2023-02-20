@@ -28,19 +28,13 @@ namespace Keyboard
         GameObject keyCap;
         [SerializeField]
         bool createNewKeyButton = false;
-        [SerializeField]
-        bool createButtonEvent = false;
 
         [Space, Header("Keyboard Setting")]
-        [SerializeField]
-        KeyBoardManager keyBoardManager;
         [SerializeField, Range(20,50)]
         int keySize = 30;
         [SerializeField]
         KeySetting currentKeySetting;
         public List<KeyButton> keyButtons = new List<KeyButton>();
-
-        bool shift = false;
         #endregion
 
         // Start is called before the first frame update
@@ -52,23 +46,11 @@ namespace Keyboard
                 CreateNewKeyButton();
                 ChangeKeySetting(ref currentKeySetting);
             }
-            if (createButtonEvent)
-            {
-                CreateButtonEvent();
-            }
-            shift = keyBoardManager.shiftKey;
-            ChangeKeySetting(ref keyBoardManager.keyMerge.key, shift);
-
         }
 
-        private void Update()
+        public void ChangeKeyUI(ref KeySetting key, bool shift)
         {
-            //thinking...
-            if(keyBoardManager != null || shift != keyBoardManager.shiftKey)
-            {
-                shift = keyBoardManager.shiftKey;
-                ChangeKeySetting(ref keyBoardManager.keyMerge.key, shift);
-            }
+            ChangeKeySetting(ref key, shift);
         }
 
         #region Create Key
@@ -108,12 +90,6 @@ namespace Keyboard
             rect.localScale = Vector3.one;
             rect.sizeDelta = button.UIScale * keySize;
         }
-
-        void ChangeButtonRect(ref RectTransform rect, int index)
-        {
-
-        }
-
         #endregion
 
         public void ChangeKeySetting(ref KeySetting keySetting, bool shift = false)
@@ -129,10 +105,18 @@ namespace Keyboard
                         key.text.text = keySetting.keyString[(key.index * 2) + (shift ? 1 : 0)].ToString();
 
                     }
+                    else if (key.index >= 100)
+                    {
+                        key.text.text = keySetting.num[key.index - 100].ToString();
+                    }
                     else
                     {
                         key.text.text = key.name;
                     }
+                }
+                else if (key.index == -4)
+                {
+                    key.text.text = keySetting.space;
                 }
                 else
                 {
@@ -141,14 +125,6 @@ namespace Keyboard
             }
         }
 
-        public void CreateButtonEvent()
-        {
-            foreach(var key in keyButtons)
-            {
-                key.text.GetComponent<Button>().onClick.RemoveAllListeners();
-                key.text.GetComponent<Button>().onClick.AddListener(() => keyBoardManager.AddKey(key.index));
-            }
-        }
     }
 
 }

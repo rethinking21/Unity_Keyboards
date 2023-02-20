@@ -8,12 +8,21 @@ namespace Keyboard
     {
         public string keyString = null;
 
+        public string space = "space";
+        public string num = "0123456789";
+
+        public virtual void ChangeMode()
+        {
+
+        }
     }
 
     public class KeyMerge
     {
         public string text = "";
         public KeySetting key;
+        public bool shift = false;
+        public bool UIChanged = true;
 
         public virtual void AddKey(int keyIndex)
         {
