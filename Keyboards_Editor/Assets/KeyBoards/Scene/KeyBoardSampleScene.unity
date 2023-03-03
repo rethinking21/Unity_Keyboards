@@ -8433,7 +8433,7 @@ MonoBehaviour:
   text: 
   KeyBoardUI: {fileID: 1513277433}
   textUI: {fileID: 1293744967}
-  keyboardType: 000000000100000002000000
+  keyboardType: 00000000010000000200000003000000
 --- !u!114 &1513277433
 MonoBehaviour:
   m_ObjectHideFlags: 0

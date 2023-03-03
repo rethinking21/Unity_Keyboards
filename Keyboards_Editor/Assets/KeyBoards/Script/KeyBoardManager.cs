@@ -12,6 +12,7 @@ namespace Keyboard
             ENG = 0,
             KOR,
             JPN,
+            CHN
         }
 
         public string text;
@@ -21,7 +22,7 @@ namespace Keyboard
         [SerializeField]
         Text textUI;
         [SerializeField]
-        TYPE[] keyboardType = { TYPE.ENG, TYPE.KOR, TYPE.JPN };
+        TYPE[] keyboardType = { TYPE.ENG, TYPE.KOR, TYPE.JPN, TYPE.CHN };
 
         List<KeyMerge> keyboardTypes = new List<KeyMerge>();
         int currentTypeIndex = 0;
@@ -111,6 +112,7 @@ namespace Keyboard
             if (type == TYPE.ENG) keyboardTypes.Add(new EngKeyMerge());
             else if (type == TYPE.KOR) keyboardTypes.Add(new KorKeyMerge());
             else if (type == TYPE.JPN) keyboardTypes.Add(new JpnKeyMerge());
+            else if (type == TYPE.CHN) keyboardTypes.Add(new ChnKeyMerge());
         }
 
         void ChangeNextType()
