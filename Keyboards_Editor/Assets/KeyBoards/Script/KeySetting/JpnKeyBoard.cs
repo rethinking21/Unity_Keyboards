@@ -617,13 +617,16 @@ namespace Keyboard
             {
                 if (keyMode == KEYMODE.KANJI)
                 {
-                    if (kanjiData.kanjiTempList.Count > (kanjiIndex * 10))
+                    if(keyIndex == 110)
                     {
-                        kanjiIndex += (keyIndex == 110) ? -1 : 1; 
+                        kanjiIndex--;
                         if (kanjiIndex < 0) kanjiIndex = 0;
-                        key.num = ShowKanjiNum(kanjiIndex);
-                        UIChanged = true;
                     }
+                    else if (kanjiData.kanjiTempList.Count > (kanjiIndex * 10))
+                    {
+                        kanjiIndex++;
+                    }
+                    key.num = ShowKanjiNum(kanjiIndex);
                     UIChanged = true;
                 }
             }

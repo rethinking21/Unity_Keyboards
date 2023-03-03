@@ -30,7 +30,7 @@ namespace Keyboard
 
         public override void AddKey(int keyIndex)
         {
-            if (keyIndex >= 0)
+            if (keyIndex >= 0 && key.keyString.Length > keyIndex)
             {
                 if(key.keyString.Length > keyIndex)
                 {
