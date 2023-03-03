@@ -10,7 +10,7 @@ import json
 from collections import OrderedDict
 
 RAWDATA_PATH = r'./rawdata/kanjidic2.xml'
-JSON_PATH = r'./result/kanji.json'
+JSON_PATH = r'./result/kanji_sorted.json'
 
 # region hiragana and katakana
 hiragana: dict = {
@@ -213,8 +213,12 @@ for character_xml in root.iter('character'):
             info_list.append(info)
     count += 1
 
+print("$ sort by freq")
+info_list.sort(key=lambda x: x['freq'])
+
 print("$ make json data")
 json_data = OrderedDict({"list": info_list})
+
 
 with open(JSON_PATH, "w", encoding='utf-8') as json_file:
     json.dump(json_data, json_file, ensure_ascii=False, indent='\t')

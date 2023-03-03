@@ -13,6 +13,8 @@ namespace Keyboard
         {
             keyString = hiraganaKeyString;
             space = "ªÒ";
+            nextNum = "  ";
+            language = "Jpn";
         }
 
         public override void ChangeMode()
@@ -21,18 +23,21 @@ namespace Keyboard
             {
                 keyString = hiraganaKeyString;
                 space = "ªÒ";
+                nextNum = "  ";
                 keyMode = JpnKeyMerge.KEYMODE.HIRAGANA;
             }
             else if (keyMode == JpnKeyMerge.KEYMODE.KATAKANA)
             {
                 keyString = engKeyString;
                 space = "ùÓí®";
+                nextNum = "<>";
                 keyMode = JpnKeyMerge.KEYMODE.KANJI;
             }
             else if (keyMode == JpnKeyMerge.KEYMODE.HIRAGANA)
             {
                 keyString = katakanaKeyString;
                 space = "««";
+                nextNum = "  ";
                 keyMode = JpnKeyMerge.KEYMODE.KATAKANA;
             }
         }
@@ -61,6 +66,9 @@ namespace Keyboard
         JPN_STATUS waitStatus = JPN_STATUS.NONE;
         KEYMODE keyMode = KEYMODE.HIRAGANA;
 
+        JpnKanjiDatas kanjiData = null;
+        int kanjiIndex = 0;
+
         public enum KEYMODE
         {
             HIRAGANA = 0,
@@ -76,6 +84,7 @@ namespace Keyboard
             CONSONANT_SECOND, // tsu
             CONSONANT_SECOND_H,// ch sh (cha sha chu shu cho sho chi shi)
             CONSONANT_SECOND_Y, //_y
+            KANJI_SEARCH
         }
 
         #region Jpn Letter Data
@@ -157,11 +166,13 @@ namespace Keyboard
         public JpnKeyMerge()
         {
             key = new JpnKeySetting();
+            KanjiDataLoad();
         }
 
         public JpnKeyMerge(JpnKeySetting jpnKey)
         {
             key = jpnKey;
+            KanjiDataLoad();
         }
 
         public override void AddKey(int keyIndex)
@@ -274,7 +285,7 @@ namespace Keyboard
                                 }
                                 else if (vowelIndex == 1)
                                 {
-                                    text += hiraganaOne[(keyChar == 's') ? 2 : 3];
+                                    text += hiraganaOne[((keyChar == 's') ? 2 : 3) * 5 + 1];
                                     waitString = "";
                                     waitStatus = JPN_STATUS.NONE;
                                 }
@@ -469,7 +480,7 @@ namespace Keyboard
                                 }
                                 else if (vowelIndex == 1)
                                 {
-                                    text += katakanaOne[(keyChar == 's') ? 2 : 3];
+                                    text += katakanaOne[((keyChar == 's') ? 2 : 3) * 5 + 1];
                                     waitString = "";
                                     waitStatus = JPN_STATUS.NONE;
                                 }
@@ -562,23 +573,58 @@ namespace Keyboard
                 }
                 else if (keyMode == KEYMODE.KANJI)
                 {
-                    //thinking better way (search)
-                    #region waitStatus Switch
-
-
-                    #endregion
+                    if (keyIndex % 2 == 1)
+                    {
+                        PushTempChar();
+                        text += engs[keyIndex];
+                        waitStatus = JPN_STATUS.NONE;
+                    }
+                    else
+                    {
+                        waitString += engs[keyIndex];
+                        if(waitString.Length < 2)
+                        {
+                            UpdateSearchKanji(ref waitString);
+                        }
+                        else
+                        {
+                            UpdateAddCharKanji(ref waitString);
+                        }
+                        kanjiIndex = 0;
+                    }
                 }
             }
             else if (keyIndex >= 100 && keyIndex < 110)
             {
                 if(keyMode == KEYMODE.KANJI)
                 {
+                    if (!"0123456789".Contains(key.num[keyIndex - 100]))
+                    {
+                        waitString = key.num[keyIndex - 100].ToString();
+                        kanjiData.kanjiTempList.Clear();
+                        PushTempChar();
+                        key.num = "0123456789";
+                    }
                     waitStatus = JPN_STATUS.NONE;
                 }
                 else
                 {
                     PushTempChar();
                     text += (keyIndex - 100).ToString();
+                }
+            }
+            else if (keyIndex >= 110 && keyIndex < 112)
+            {
+                if (keyMode == KEYMODE.KANJI)
+                {
+                    if (kanjiData.kanjiTempList.Count > (kanjiIndex * 10))
+                    {
+                        kanjiIndex += (keyIndex == 110) ? -1 : 1; 
+                        if (kanjiIndex < 0) kanjiIndex = 0;
+                        key.num = ShowKanjiNum(kanjiIndex);
+                        UIChanged = true;
+                    }
+                    UIChanged = true;
                 }
             }
             else if (keyIndex == -3) // del
@@ -623,7 +669,21 @@ namespace Keyboard
                 }
                 else
                 {
-
+                    if(waitString.Length != 0)
+                    {
+                        waitString = waitString.Remove(waitString.Length - 1);
+                        if (waitString.Length != 0)
+                        {
+                            UpdateSearchKanji(ref waitString);
+                        }
+                        else
+                        {
+                            key.num = "0123456789";
+                            kanjiData.kanjiTempList.Clear();
+                            UIChanged = true;
+                        }
+                    }
+                    kanjiIndex = 0;
                 }
             }
             else if (keyIndex == -2) //shift
@@ -636,15 +696,16 @@ namespace Keyboard
                 //not this
                 PushTempChar();
                 key.ChangeMode();
+                key.num = "0123456789";
                 keyMode = (key as JpnKeySetting).keyMode;
                 UIChanged = true;
             }
+
         }
 
         public override string GetString()
         {
             return text + waitString;
-            //thinking..
         }
 
         public override void ClearAll()
@@ -652,7 +713,6 @@ namespace Keyboard
             text = "";
             waitString = "";
             waitStatus = JPN_STATUS.NONE;
-            keyMode = KEYMODE.HIRAGANA;
         }
 
         public override void PushTempChar()
@@ -666,6 +726,60 @@ namespace Keyboard
         {
             return waitString.Length == 0;
         }
+
+        #region Kanji Search
+        void KanjiDataLoad()
+        {
+            kanjiData = new JpnKanjiDatas();
+            kanjiData.LoadJsonToClass();
+        }
+
+        void UpdateSearchKanji(ref string engText)
+        {
+            kanjiData.UpdateSearch(engText);
+            key.num = ShowKanjiNum(0);
+            UIChanged = true;
+        }
+
+        void UpdateAddCharKanji(ref string engText)
+        {
+            kanjiData.UpdateAddChar(engText);
+            key.num = ShowKanjiNum(0);
+            UIChanged = true;
+        }
+
+        string ShowKanjiNum(int numIndex)
+        {
+            string result = "";
+            for (int index = 0; index < 10 ; index++)
+            {
+                if (kanjiData.kanjiTempList.Count > (index + numIndex * 10))
+                {
+                    if (index == 9)
+                    {
+                        result = kanjiData.kanjiTempList[index + numIndex * 10].literal + result;
+                    }
+                    else
+                    {
+                        result += kanjiData.kanjiTempList[index + numIndex * 10].literal;
+                    }
+                }
+                else
+                {
+                    if (index == 9)
+                    {
+                        result = ((index + 1) % 10).ToString() + result;
+                    }
+                    else
+                    {
+                        result += ((index + 1) % 10).ToString();
+                    }
+                }
+            }
+            return result;
+        }
+
+        #endregion
 
     }
 }

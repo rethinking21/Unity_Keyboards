@@ -47,10 +47,17 @@ namespace Keyboard
                 if (keyIndex >= 0 && keyIndex <= 25)
                 {
                     keyMerge.AddKey(keyIndex * 2 + (keyMerge.shift ? 1 : 0));
+                    if (keyMerge.shift)
+                    {
+                        keyMerge.shift = false;
+                        keyMerge.UIChanged = true;
+                    }
                 }
-                else if (keyIndex >= 100 && keyIndex < 110)
+                else if (keyIndex >= 100 && keyIndex < 112) // number
                 {
                     keyMerge.AddKey(keyIndex);
+                    keyMerge.shift = false;
+                    keyMerge.UIChanged = true;
                 }
             }
             //special key

@@ -10,6 +10,8 @@ namespace Keyboard
 
         public string space = "space";
         public string num = "0123456789";
+        public string nextNum = "  "; // -, =
+        public string language = "ln";
 
         public virtual void ChangeMode()
         {

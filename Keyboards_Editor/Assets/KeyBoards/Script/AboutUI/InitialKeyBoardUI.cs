@@ -105,18 +105,26 @@ namespace Keyboard
                         key.text.text = keySetting.keyString[(key.index * 2) + (shift ? 1 : 0)].ToString();
 
                     }
-                    else if (key.index >= 100)
+                    else if (key.index >= 100 && key.index < 110)
                     {
                         key.text.text = keySetting.num[key.index - 100].ToString();
+                    }
+                    else if (key.index > 109)
+                    {
+                        key.text.text = keySetting.nextNum[key.index - 110].ToString();
                     }
                     else
                     {
                         key.text.text = key.name;
                     }
                 }
-                else if (key.index == -4)
+                else if (key.index == -4) // space
                 {
                     key.text.text = keySetting.space;
+                }
+                else if (key.index == -5) // ln
+                {
+                    key.text.text = keySetting.language;
                 }
                 else
                 {

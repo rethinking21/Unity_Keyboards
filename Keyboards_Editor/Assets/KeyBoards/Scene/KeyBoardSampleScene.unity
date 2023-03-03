@@ -4897,7 +4897,7 @@ GameObject:
   - component: {fileID: 931026620}
   - component: {fileID: 931026619}
   m_Layer: 5
-  m_Name: Button 0 (1)
+  m_Name: Button -
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4975,7 +4975,7 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 100
+          m_IntArgument: 110
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -5944,7 +5944,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 0
+  m_Text: '-'
 --- !u!222 &1144781551
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -6826,7 +6826,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 0
+  m_Text: =
 --- !u!222 &1247417931
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -7838,7 +7838,7 @@ GameObject:
   - component: {fileID: 1429445261}
   - component: {fileID: 1429445260}
   m_Layer: 5
-  m_Name: Button 0 (2)
+  m_Name: Button =
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7916,7 +7916,7 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 100
+          m_IntArgument: 111
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -8433,6 +8433,7 @@ MonoBehaviour:
   text: 
   KeyBoardUI: {fileID: 1513277433}
   textUI: {fileID: 1293744967}
+  keyboardType: 000000000100000002000000
 --- !u!114 &1513277433
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8445,9 +8446,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 086086ac833f93b4691cad1931d551c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  keyCap: {fileID: 6216688924758945855, guid: e4af5353b62d6174ab5f1f415454bf8e, type: 3}
+  keyCap: {fileID: 3647469961359875130, guid: 3ec4d65f9a821d24fb71b916be60ad0a, type: 3}
   createNewKeyButton: 0
-  keyBoardManager: {fileID: 1513277432}
   keySize: 35
   keyButtons:
   - name: enter
@@ -8471,61 +8471,61 @@ MonoBehaviour:
   - name: 1
     index: 101
     text: {fileID: 1546782763}
-    specialKey: 1
+    specialKey: 0
     UIPosition: {x: -5, y: 2}
     UIScale: {x: 1, y: 1}
   - name: 2
     index: 102
     text: {fileID: 636681283}
-    specialKey: 1
+    specialKey: 0
     UIPosition: {x: -4, y: 2}
     UIScale: {x: 1, y: 1}
   - name: 3
     index: 103
     text: {fileID: 1204613296}
-    specialKey: 1
+    specialKey: 0
     UIPosition: {x: -3, y: 2}
     UIScale: {x: 1, y: 1}
   - name: 4
     index: 104
     text: {fileID: 446775712}
-    specialKey: 1
+    specialKey: 0
     UIPosition: {x: -2, y: 2}
     UIScale: {x: 1, y: 1}
   - name: 5
     index: 105
     text: {fileID: 1392047113}
-    specialKey: 1
+    specialKey: 0
     UIPosition: {x: -1, y: 2}
     UIScale: {x: 1, y: 1}
   - name: 6
     index: 106
     text: {fileID: 1203497355}
-    specialKey: 1
+    specialKey: 0
     UIPosition: {x: 0, y: 2}
     UIScale: {x: 1, y: 1}
   - name: 7
     index: 107
     text: {fileID: 972685140}
-    specialKey: 1
+    specialKey: 0
     UIPosition: {x: 1, y: 2}
     UIScale: {x: 1, y: 1}
   - name: 8
     index: 108
     text: {fileID: 546945546}
-    specialKey: 1
+    specialKey: 0
     UIPosition: {x: 2, y: 2}
     UIScale: {x: 1, y: 1}
   - name: 9
     index: 109
     text: {fileID: 1653988949}
-    specialKey: 1
+    specialKey: 0
     UIPosition: {x: 3, y: 2}
     UIScale: {x: 1, y: 1}
   - name: 0
     index: 100
     text: {fileID: 1277072346}
-    specialKey: 1
+    specialKey: 0
     UIPosition: {x: 4, y: 2}
     UIScale: {x: 1, y: 1}
   - name: q
@@ -8695,6 +8695,18 @@ MonoBehaviour:
     text: {fileID: 800197228}
     specialKey: 1
     UIPosition: {x: -5, y: -2}
+    UIScale: {x: 1, y: 1}
+  - name: '-'
+    index: 110
+    text: {fileID: 1144781550}
+    specialKey: 0
+    UIPosition: {x: 5, y: 2}
+    UIScale: {x: 1, y: 1}
+  - name: =
+    index: 111
+    text: {fileID: 1247417930}
+    specialKey: 0
+    UIPosition: {x: 6, y: 2}
     UIScale: {x: 1, y: 1}
 --- !u!114 &1513277434
 MonoBehaviour:

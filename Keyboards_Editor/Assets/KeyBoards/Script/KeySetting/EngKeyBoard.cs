@@ -12,6 +12,7 @@ namespace Keyboard
                 "qQwWeErRtTyYuUiIoOpP"
                 + "aAsSdDfFgGhHjJkKlL"
                 + "zZxXcCvVbBnNmM"; //52
+            language = "Eng";
         }
     }
 
