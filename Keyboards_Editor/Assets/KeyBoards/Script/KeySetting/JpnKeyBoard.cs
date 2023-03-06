@@ -96,8 +96,8 @@ namespace Keyboard
 
         static readonly string consonants = "aiueo"; //AIUEO
         static readonly string JpnShiftEnglish = "ZJAIUEO";
-        static readonly string oneIndex = " kstnhmrywjgzdbqf";
-        static readonly string twoIndex = "dkstnhmrgzjbq"; // no d(index 0) in katakana
+        static readonly string oneIndex = " kstnhmrywjgzdbpf";
+        static readonly string twoIndex = "dkstnhmrgzjbp"; // no d(index 0) in katakana
 
         static readonly char hiraganaSokoun = 'ªÃ';
         static readonly char hiraganaN = 'ªó';
@@ -604,6 +604,11 @@ namespace Keyboard
                         kanjiData.kanjiTempList.Clear();
                         PushTempChar();
                         key.num = "0123456789";
+                    }
+                    else
+                    {
+                        PushTempChar();
+                        text += (keyIndex - 100).ToString();
                     }
                     waitStatus = JPN_STATUS.NONE;
                 }
